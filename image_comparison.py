@@ -3,6 +3,7 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import cv2
+import math
 from skimage.metrics import structural_similarity as ssim
 
 
@@ -111,7 +112,7 @@ def compare_image(expected_image_path, actual_image_path):
     target_width = image_test.shape[1]
     target_height = image_test.shape[0]
     target_size = (target_width, target_height)
-    print("DEMO IMAGE COMPARISON")
+
     print("Image name: {}, shape: {}".format(expected_image_path, image_test.shape))
 
     image_data = cv2.imread(actual_image_path)
@@ -134,23 +135,31 @@ def compare_image(expected_image_path, actual_image_path):
     print("Image name: {}, shape: {}".format(actual_image_path, image_test.shape))
     print("c = {}, s = {}".format(c, s))
 
-    if c == 0 and s == 1:
+    if c == 0 and math.isclose(1, s, abs_tol=0.001):
         similar = True
 
     return similar
+
+
+def demo_compare1():
+    print("DEMO IMAGE COMPARISON1")
+    image_path1 = 'Sample3.JPG'
+
+    for i in range(1, 9):
+        # data image
+        image_path2 = 'Sample3_Neg{}.jpg'.format(i)
+        print("Comparing image {} and {}.".format(image_path1, image_path2))
+        is_similar = compare_image(image_path1, image_path2)
+        if is_similar:
+            print("They are similar")
+        else:
+            print("They are different")
 
 
 if __name__ == '__main__':
     demo_on_sample1()
     demo_on_sample2()
     demo_resize()
-    image_path1 = 'Sample3.JPG'
-    image_path2 = 'Sample3_Neg1.JPG'
-    print("Comparing image {} and {}.".format(image_path1, image_path2))
-    IsSimilar = compare_image(image_path1, image_path2)
-    if IsSimilar:
-        print("They are similar")
-    else:
-        print("They are different")
+    demo_compare1()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
